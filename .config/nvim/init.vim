@@ -14,10 +14,23 @@ Plug 'junegunn/goyo.vim'
 Plug 'jreybert/vimagit'
 Plug 'lukesmithxyz/vimling'
 Plug 'vimwiki/vimwiki'
+Plug 'bling/vim-bufferline'
 Plug 'bling/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 call plug#end()
+
+" Add cpp template
+if !empty(glob('~/.config/nvim/templates/skeleton.cpp'))
+    autocmd BufNewFile *.cpp 0r ~/.config/nvim/templates/skeleton.cpp
+endif
+
+if exists('*strftime')
+    au BufNewFile *.cpp :call append(0, '/**')
+    au BufNewFile *.cpp :call append(1, ' *    author:  koxuan')
+    au BufNewFile *.cpp :call append(2, ' *    created: '.strftime('%d.%m.%Y %T'))
+    au BufNewFile *.cpp :call append(3, '**/')
+endif
 
 set title
 set bg=light
@@ -37,6 +50,9 @@ set noshowcmd
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
+	set tabstop=4
+	set shiftwidth=4
+
 " Enable autocompletion:
 	set wildmode=longest,list,full
 " Disables automatic commenting on newline:

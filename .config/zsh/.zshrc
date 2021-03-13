@@ -23,9 +23,9 @@ zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
 _comp_options+=(globdots)		# Include hidden files.
-
 # vi mode
 bindkey -v
+bindkey '^R' history-incremental-search-backward
 export KEYTIMEOUT=1
 
 # Use vim keys in tab complete menu:
