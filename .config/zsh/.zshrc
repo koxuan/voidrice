@@ -6,7 +6,6 @@ PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magent
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
-
 # History in cache directory:
 HISTSIZE=10000000
 SAVEHIST=10000000
@@ -34,6 +33,8 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -v '^?' backward-delete-char
+
+#bind jj to escape key in insert mode
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select () {
@@ -75,3 +76,6 @@ bindkey '^e' edit-command-line
 
 # Load syntax highlighting; should be last.
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+#my changes
+alias rm='echo "This is not the command you are looking for."; false'
+#end of my changes

@@ -1,11 +1,14 @@
 let mapleader =","
 
-if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
+
+ if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
 	silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
 	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
 	autocmd VimEnter * PlugInstall
 endif
+
+
 
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 Plug 'tpope/vim-surround'
@@ -18,7 +21,11 @@ Plug 'bling/vim-bufferline'
 Plug 'bling/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
+Plug 'Raimondi/delimitMate'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clangd-completer ' }
 call plug#end()
+
+
 
 " Add cpp template
 if !empty(glob('~/.config/nvim/templates/skeleton.cpp'))
@@ -28,7 +35,7 @@ endif
 if exists('*strftime')
     au BufNewFile *.cpp :call append(0, '/**')
     au BufNewFile *.cpp :call append(1, ' *    author:  koxuan')
-    au BufNewFile *.cpp :call append(2, ' *    created: '.strftime('%d.%m.%Y %T'))
+    au BufNewFile *.cpp :call append(2, ' *    created: '.strftime('%d.%m.%Y'))
     au BufNewFile *.cpp :call append(3, '**/')
 endif
 
@@ -42,6 +49,11 @@ set noshowmode
 set noruler
 set laststatus=0
 set noshowcmd
+
+" bind double jj and the rest to escape
+"inoremap jj <Esc>
+"inoremap kk <Esc>
+"inoremap hh <Esc>
 
 " Some basics:
 	nnoremap c "_c
@@ -74,6 +86,8 @@ set noshowcmd
     else
         let NERDTreeBookmarksFile = '~/.vim' . '/NERDTreeBookmarks'
     endif
+" DelimitMate
+let delimitMate_expand_cr = 1
 
 " vimling:
 	nm <leader><leader>d :call ToggleDeadKeys()<CR>
@@ -128,9 +142,9 @@ set noshowcmd
 	autocmd BufRead,BufNewFile /tmp/neomutt* map ZQ :Goyo\|q!<CR>
 
 " Automatically deletes all trailing whitespace and newlines at end of file on save.
-	autocmd BufWritePre * %s/\s\+$//e
-	autocmd BufWritePre * %s/\n\+\%$//e
-	autocmd BufWritePre *.[ch] %s/\%$/\r/e
+""	autocmd BufWritePre * %s/\s\+$//e
+""	autocmd BufWritePre * %s/\n\+\%$//e
+""	autocmd BufWritePre *.[ch] %s/\%$/\r/e
 
 " When shortcut files are updated, renew bash and ranger configs with new material:
 	autocmd BufWritePost bm-files,bm-dirs !shortcuts
@@ -139,6 +153,15 @@ set noshowcmd
 	autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
 " Recompile dwmblocks on config edit.
 	autocmd BufWritePost ~/.local/src/dwmblocks/config.h !cd ~/.local/src/dwmblocks/; sudo make install && { killall -q dwmblocks;setsid -f dwmblocks }
+"compile cpp binding F4 binding"
+autocmd filetype cpp nnoremap <F4> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r.o').' && ./'.shellescape('%:r.o')' < '.shellescape('%:r')<CR>
+"save file binding F3 binding"
+nnoremap <F3> :w <bar> <CR>
+
+"buffer list binding F5 binding"
+nnoremap <F5> :buffers<CR>:buffer<Space>
+
+
 
 " Turns off highlighting on the bits of code that are changed, so the line that is changed is highlighted but the actual text that has changed stands out on the line and is readable.
 if &diff
